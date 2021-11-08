@@ -21,11 +21,33 @@
   )
  )
 
+ (defn addId-hm
+  "Add unique id to nodes in a tree store in a hash-map"
+  [tree i]
+  (if-not tree (list '() i)
+    (let [
+      nValue (list (tree :value) i) ;; we do not handle missing :value
+      left  (addId-hm (tree :left) (+ i 1))
+      n-left (first left)
+      i2 (first (rest left))
+      right  (addId-hm (tree :right) i2)
+      n-right (first right)
+      i3 (first (rest right))
+      r {:value nValue}
+      r2 (if (empty? n-left) r (assoc r :left n-left))
+      r3 (if (empty? n-right) r2 (assoc r2 :right n-right))
+    ] (list r3 i3))
+  ))
+
 (defn -main
   "Test addId"
   [& args]
-  (println "Hello, World!")
+  (println "Using a list to store the tree")
   (def tree '("a" ("b") ("c" ("d") ("e"))))
   (println tree)
   (println (addId tree 1))
+  (println "Using a hash-map to store the tree")
+  (def hm-tree {:value "a" :left {:value "b"} :right {:value "c" :left {:value "d"} :right {:value "e"}}})
+  (println hm-tree)
+  (println (addId-hm hm-tree 1))
 )

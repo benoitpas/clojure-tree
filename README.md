@@ -1,7 +1,10 @@
 # clojure-tree
 
+[![Build Status](https://travis-ci.com/benoitpas/clojure-tree.svg?branch=main)](https://app.travis-ci.com/github/benoitpas/clojure-tree)
+
 Implementation of algorithm that adds a unique id to nodes of a tree in clojure
 
+Written for the article [Three threes](https://benoitpas.github.io/ThreeTrees/).
 ## License
 
 Copyright © 2021 FIXME

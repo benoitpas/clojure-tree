@@ -1,8 +1,10 @@
 (ns clojure-tree.core
   (:gen-class))
 
+(require '[clojure.core.reducers :as r])
+
 (defn addId
-  "Add unique id to nodes in a tree"
+  "Add unique id to nodes in a binary tree"
   [tree i]
   (case (count tree)
   0 tree
@@ -18,6 +20,29 @@
           right (addId (first (rest (rest tree))) (first (rest left)))
          ]
      (list (list nvalue (first left) (first right)) (first (rest right)) ))
+  )
+ )
+
+(defn addId-nary
+  "Add unique id to nodes in an n-ary tree"
+  [tree i]
+  (case (count tree)
+  0 tree
+  1 (list (list (list (first tree) i)) (+ i 1))
+    (let [
+      nValue (list (first tree) i)
+      branches (rest tree)
+      reducef (fn
+        ([] (list (+ i 1)))
+        ([a tree]
+          (let [
+            nTree (addId-nary tree (first a))
+          ] (cons (first (rest nTree)) (cons (first nTree) (rest a)))
+          )
+        )
+      )
+      n-branches (r/fold reducef (rest tree))
+    ] (list (cons nValue (rest n-branches)) (first n-branches)))
   )
  )
 
@@ -46,6 +71,8 @@
   (def tree '("a" ("b") ("c" ("d") ("e"))))
   (println tree)
   (println (addId tree 1))
+  (println (addId-nary tree 1))
+
   (println "Using a hash-map to store the tree")
   (def hm-tree {:value "a" :left {:value "b"} :right {:value "c" :left {:value "d"} :right {:value "e"}}})
   (println hm-tree)

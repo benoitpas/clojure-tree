@@ -28,7 +28,6 @@
   [tree i]
   (case (count tree)
   0 tree
-  1 (list (list (list (first tree) i)) (+ i 1))
     (let [
       nValue (list (first tree) i)
       branches (rest tree)
